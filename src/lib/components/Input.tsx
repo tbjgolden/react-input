@@ -103,7 +103,7 @@ export const Input: React.FC<{
           style={{
             fontSize: '75%',
             color: placeholderColor,
-            padding: '.8em 1.5em',
+            padding: '.8em 1.5em 0',
           }}
         >
           {status}
