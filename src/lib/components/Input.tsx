@@ -12,7 +12,7 @@ export const Input: React.FC<{
   validator?: RegExp | ((str: string) => boolean);
   status?: React.ReactNode;
 }> = ({ label, value, onChange, validator = defaultValidator, status }) => {
-  const { shades, semantic } = useTheme();
+  const { isDarkMode, shades, semantic } = useTheme();
   const debounceRef = useRef<ReturnType<typeof setTimeout>>();
   const [hasBeenEdited, setHasBeenEdited] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
@@ -34,9 +34,10 @@ export const Input: React.FC<{
     borderColor = isValid ? semantic.success : semantic.danger;
 
     if (!isValid && status === undefined) {
-      status = validator === defaultValidator
-        ? `${label} is required`
-        : `${label} is invalid`;
+      status =
+        validator === defaultValidator
+          ? `${label} is required`
+          : `${label} is invalid`;
     }
   }
 
@@ -57,7 +58,7 @@ export const Input: React.FC<{
             fontSize: value === '' ? 'inherit' : '75%',
             color: placeholderColor,
             opacity: isFocused && value === '' ? 0.5 : 1,
-            padding: value === '' ? '1.2em 1.05em' : '.8em 1.33em 0',
+            padding: value === '' ? '1.2em 1em' : '.8em 1.33em 0',
             position: 'absolute',
             top: 0,
             left: 0,
@@ -82,13 +83,14 @@ export const Input: React.FC<{
                 if (!hasBeenEdited) {
                   setHasBeenEdited(true);
                 }
-              });
+              }, 300);
             }
           }}
           style={{
-            color: placeholderColor,
+            color: shades[isFocused ? 100 : isDarkMode ? 80 : 70],
             borderBottom: `2px solid ${borderColor}`,
-            backgroundColor: shades[isFocused ? 10 : 8],
+            backgroundColor:
+              shades[isFocused ? (isDarkMode ? 15 : 12) : isDarkMode ? 10 : 8],
             padding: value === '' ? `1.2em 1em` : `1.7em 1em .7em`,
             fontSize: 'inherit',
             outline: 0,
@@ -103,7 +105,7 @@ export const Input: React.FC<{
           style={{
             fontSize: '75%',
             color: placeholderColor,
-            padding: '.8em 1.5em 0',
+            padding: '.6em 1.4em 0',
           }}
         >
           {status}
