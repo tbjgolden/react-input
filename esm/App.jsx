@@ -1,23 +1,19 @@
 import React, { useState } from 'react';
 import { Examples } from './Examples';
 import { ThemeContext, DEFAULT_THEME } from './lib/theme';
-
-export const Home = (): JSX.Element => {
-  const [darkModeForce, setDarkModeForce] = useState<boolean | null>(null);
-  const [hueForce, setHueForce] = useState<number | null>(null);
-  const [saturationForce, setSaturationForce] = useState<number | null>(null);
-
+export const Home = () => {
+  const [darkModeForce, setDarkModeForce] = useState(null);
+  const [hueForce, setHueForce] = useState(null);
+  const [saturationForce, setSaturationForce] = useState(null);
   const isDarkMode = darkModeForce ?? DEFAULT_THEME.isDarkMode;
   const hue = hueForce ?? DEFAULT_THEME.hue;
   const saturation = saturationForce ?? DEFAULT_THEME.saturation;
-
   const theme = {
     ...DEFAULT_THEME,
     isDarkMode,
     hue,
     saturation,
   };
-
   return (
     <ThemeContext.Provider
       value={{
@@ -76,5 +72,4 @@ export const Home = (): JSX.Element => {
     </ThemeContext.Provider>
   );
 };
-
 export default Home;

@@ -1,20 +1,18 @@
-# New Project
+# `react-input`
 
-> ✨ Bootstrapped with Create Snowpack App (CSA).
+**A complete\* set of input elements with a consistent API and style across browsers.**
 
-## Available Scripts
+> \* leave an issue if there's something missing! :D
 
-### npm start
+## Installation
 
-Runs the app in the development mode.
-Open http://localhost:8080 to view it in the browser.
+This library is currently not on `npm`.
 
-The page will reload if you make edits.
-You will also see any lint errors in the console.
+Instead, all of the logic can be copied directly from `/src/lib`.
 
-### npm run build
+> If you're using plain JavaScript ES modules
+> copy `/esm/lib` instead.
 
-Builds a static copy of your site to the `build/` folder.
-Your app is ready to be deployed!
+## Usage
 
-**For the best production performance:** Add a build bundler plugin like "@snowpack/plugin-webpack" to your `snowpack.config.mjs` config file.
+Common usage examples are shown in `/src/Examples.tsx`.

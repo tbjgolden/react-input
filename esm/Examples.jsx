@@ -1,14 +1,12 @@
 import React, { useRef, useState } from 'react';
-import { TextInput } from './components/TextInput';
-
-export const Examples: React.FC = () => {
+import { TextInput } from './lib/components/TextInput';
+export const Examples = () => {
   const [textInput1, setTextInput1] = useState('');
   const [textInput2, setTextInput2] = useState('');
   const [textInput3, setTextInput3] = useState('');
   const [textInput4, setTextInput4] = useState('');
-  const textInput5Ref = useRef<HTMLInputElement | null>(null);
+  const textInput5Ref = useRef(null);
   const [textInput5, setTextInput5] = useState('');
-
   return (
     <div>
       <Example name="Normal text input">
@@ -87,9 +85,9 @@ export const Examples: React.FC = () => {
                 <button
                   onClick={() => {
                     setTextInput5('');
-                    const el = textInput5Ref.current
+                    const el = textInput5Ref.current;
                     if (el !== null) {
-                      el.focus()
+                      el.focus();
                     }
                   }}
                   style={{
@@ -126,11 +124,7 @@ export const Examples: React.FC = () => {
     </div>
   );
 };
-
-const Example: React.FC<{
-  name: string;
-  children: React.ReactNode;
-}> = ({ name, children }) => {
+const Example = ({ name, children }) => {
   return (
     <div
       style={{
