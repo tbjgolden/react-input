@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { TextInput } from './components/TextInput';
 
 export const Examples: React.FC = () => {
@@ -6,6 +6,7 @@ export const Examples: React.FC = () => {
   const [textInput2, setTextInput2] = useState('');
   const [textInput3, setTextInput3] = useState('');
   const [textInput4, setTextInput4] = useState('');
+  const textInput5Ref = useRef<HTMLInputElement | null>(null);
   const [textInput5, setTextInput5] = useState('');
 
   return (
@@ -47,13 +48,14 @@ export const Examples: React.FC = () => {
           value={textInput5}
           onChange={setTextInput5}
           validator={null}
+          ref={textInput5Ref}
           startEnhancer={
             <div
               style={{
-                flex: '0 0 2em',
+                flex: '0 0 3em',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'flex-end',
+                justifyContent: 'center',
               }}
             >
               <svg
@@ -76,15 +78,19 @@ export const Examples: React.FC = () => {
             textInput5 === '' ? null : (
               <div
                 style={{
-                  flex: '0 0 2em',
+                  flex: '0 0 3em',
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'flex-start',
+                  justifyContent: 'center',
                 }}
               >
                 <button
                   onClick={() => {
                     setTextInput5('');
+                    const el = textInput5Ref.current
+                    if (el !== null) {
+                      el.focus()
+                    }
                   }}
                   style={{
                     background: 'none',
