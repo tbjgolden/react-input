@@ -32,6 +32,5 @@ export default {
   },
   buildOptions: {
     out: 'docs',
-    // baseUrl: '/react-input/',
   },
 };
