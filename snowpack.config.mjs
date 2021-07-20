@@ -7,6 +7,7 @@ export default {
   plugins: [
     '@snowpack/plugin-react-refresh',
     '@snowpack/plugin-dotenv',
+    '@snowpack/plugin-webpack',
     [
       '@snowpack/plugin-typescript',
       {
@@ -30,7 +31,7 @@ export default {
     /* ... */
   },
   buildOptions: {
-    out: "docs",
-    baseUrl: "/react-input/"
+    out: 'docs',
+    // baseUrl: '/react-input/',
   },
 };
