@@ -1,12 +1,12 @@
-# `react-input`
+# [`react-input`](https://tbjgolden.github.io/react-input)
 
-**A complete\* set of input elements with a consistent API and style across browsers.**
+**A complete\* set of dev-friendly, user-friendly input elements.**
 
 > \* leave an issue if there's something missing! :D
 
 ## Demo
 
-
+https://tbjgolden.github.io/react-input
 
 ## Installation
 
