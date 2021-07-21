@@ -1,61 +1,71 @@
 import React, { useRef, useState } from 'react';
-import { TextInput } from './lib/components/TextInput';
-
-export const Examples: React.FC = () => {
-  const [textInput1, setTextInput1] = useState('');
-  const [textInput2, setTextInput2] = useState('');
-  const [textInput3, setTextInput3] = useState('');
-  const [textInput4, setTextInput4] = useState('');
-  const textInput5Ref = useRef<HTMLInputElement | null>(null);
-  const [textInput5, setTextInput5] = useState('');
-
+import { TextArea } from '../components/TextArea';
+export const XTextArea = () => {
+  const [textArea1, setTextArea1] = useState('');
+  const [textArea2, setTextArea2] = useState('');
+  const [textArea3, setTextArea3] = useState('');
+  const [textArea4, setTextArea4] = useState('');
+  const [textArea5, setTextArea5] = useState('');
+  const textArea6Ref = useRef(null);
+  const [textArea6, setTextArea6] = useState('');
   return (
     <div>
-      <Example name="Normal text input">
-        <TextInput label="Fruit" value={textInput1} onChange={setTextInput1} />
+      <Example name="Normal text area">
+        <TextArea label="Fruit" value={textArea1} onChange={setTextArea1} />
       </Example>
 
-      <Example name="Text input with placeholder">
-        <TextInput
+      <Example name="Text area with placeholder">
+        <TextArea
           label="Fruit"
-          value={textInput2}
-          onChange={setTextInput2}
+          value={textArea2}
+          onChange={setTextArea2}
           placeholder="Orange"
         />
       </Example>
 
-      <Example name="Monospace text input">
-        <TextInput
+      <Example name="Monospace text area">
+        <TextArea
           label="Cyberfruit"
-          value={textInput3}
-          onChange={setTextInput3}
+          value={textArea3}
+          onChange={setTextArea3}
           monospace
         />
       </Example>
 
-      <Example name="Text input with no validation">
-        <TextInput
+      <Example name="Text area with no validation">
+        <TextArea
           label="Cyberfruit"
-          value={textInput4}
-          onChange={setTextInput4}
+          value={textArea4}
+          onChange={setTextArea4}
           validator={null}
         />
       </Example>
 
-      <Example name="Text input with custom enhancers">
-        <TextInput
-          label="Search"
-          value={textInput5}
-          onChange={setTextInput5}
+      <Example name="Text area with no resize (only uses automatic)">
+        <TextArea
+          label="Cyberfruit"
+          value={textArea5}
+          onChange={setTextArea5}
           validator={null}
-          ref={textInput5Ref}
+          resize={false}
+        />
+      </Example>
+
+      <Example name="Text area with custom enhancers">
+        <TextArea
+          label="Search"
+          value={textArea6}
+          onChange={setTextArea6}
+          validator={null}
+          ref={textArea6Ref}
           startEnhancer={
             <div
               style={{
                 flex: '0 0 3em',
                 display: 'flex',
-                alignItems: 'center',
+                alignItems: 'flex-start',
                 justifyContent: 'center',
+                padding: '1.3em 0',
               }}
             >
               <svg
@@ -75,19 +85,20 @@ export const Examples: React.FC = () => {
             </div>
           }
           endEnhancer={
-            textInput5 === '' ? null : (
+            textArea6 === '' ? null : (
               <div
                 style={{
                   flex: '0 0 3em',
                   display: 'flex',
-                  alignItems: 'center',
+                  alignItems: 'flex-start',
                   justifyContent: 'center',
+                  padding: '1.3em 0',
                 }}
               >
                 <button
                   onClick={() => {
-                    setTextInput5('');
-                    const el = textInput5Ref.current;
+                    setTextArea6('');
+                    const el = textArea6Ref.current;
                     if (el !== null) {
                       el.focus();
                     }
@@ -126,11 +137,7 @@ export const Examples: React.FC = () => {
     </div>
   );
 };
-
-const Example: React.FC<{
-  name: string;
-  children: React.ReactNode;
-}> = ({ name, children }) => {
+const Example = ({ name, children }) => {
   return (
     <div
       style={{

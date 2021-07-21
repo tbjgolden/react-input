@@ -1,9 +1,12 @@
-export const validate = (value: string, validator?: RegExp | ((str: string) => boolean) | null) => {
+export const validate = (
+  value: string,
+  validator?: RegExp | ((str: string) => boolean) | null,
+) => {
   if (validator === undefined || validator === null) {
-    return true
+    return true;
   } else if (typeof validator === 'function') {
-    return validator(value)
+    return validator(value);
   } else {
-    return validator.test(value)
+    return validator.test(value);
   }
-}
+};

@@ -91,8 +91,6 @@ export const TextInput = React.forwardRef(
             borderBottom: `2px solid ${borderColor}`,
             backgroundColor,
             color: textColor,
-            paddingLeft: isVisibleNode(startEnhancer) ? 0 : '1em',
-            paddingRight: isVisibleNode(endEnhancer) ? 0 : '1em',
           }}
         >
           {startEnhancer}
@@ -102,21 +100,6 @@ export const TextInput = React.forwardRef(
               position: 'relative',
             }}
           >
-            <div
-              style={{
-                fontSize: inputIsClosed ? 'inherit' : '75%',
-                color: labelColor,
-                padding: inputIsClosed ? '1.2em 0' : '.8em 0 0',
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                pointerEvents: 'none',
-              }}
-            >
-              {label}
-            </div>
             <input
               {...focusProps}
               ref={ref}
@@ -140,8 +123,11 @@ export const TextInput = React.forwardRef(
               }}
               style={{
                 color: textColor,
-                padding: inputIsClosed ? `1.2em 0` : `1.7em 0 .7em`,
-                fontSize: 'inherit',
+                paddingTop: inputIsClosed ? '1.2em' : '1.7em',
+                paddingBottom: inputIsClosed ? '1.2em' : '.7em',
+                paddingLeft: isVisibleNode(startEnhancer) ? 0 : '1em',
+                paddingRight: isVisibleNode(endEnhancer) ? 0 : '1em',
+                font: 'inherit',
                 outline: 0,
                 border: 0,
                 width: '100%',
@@ -149,27 +135,53 @@ export const TextInput = React.forwardRef(
                 fontFamily: monospace ? monospaceFont : 'inherit',
               }}
             />
-            {value === '' && placeholder !== undefined ? (
+            <div
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: isVisibleNode(startEnhancer) ? 0 : '1em',
+                right: isVisibleNode(endEnhancer) ? 0 : '1em',
+                bottom: 0,
+              }}
+            >
               <div
                 style={{
+                  fontSize: inputIsClosed ? 'inherit' : '75%',
+                  color: labelColor,
+                  padding: inputIsClosed ? '1.2em 0' : '.8em 0 0',
                   position: 'absolute',
-                  top: inputIsClosed ? '1.2em' : '1.7em',
+                  top: 0,
                   left: 0,
-                  userSelect: 'none',
+                  width: '100%',
+                  height: '100%',
                   pointerEvents: 'none',
-                  color: shades[40],
-                  padding: 0,
-                  fontSize: 'inherit',
-                  outline: 0,
-                  border: 0,
-                  background: 'transparent',
-                  whiteSpace: 'pre',
-                  overflow: 'hidden',
+                  userSelect: 'none',
                 }}
               >
-                {placeholder}
+                {label}
               </div>
-            ) : null}
+              {value === '' && placeholder !== undefined ? (
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: inputIsClosed ? '1.2em' : '1.7em',
+                    left: 0,
+                    userSelect: 'none',
+                    pointerEvents: 'none',
+                    color: shades[40],
+                    padding: 0,
+                    fontSize: 'inherit',
+                    outline: 0,
+                    border: 0,
+                    background: 'transparent',
+                    whiteSpace: 'pre',
+                    overflow: 'hidden',
+                  }}
+                >
+                  {placeholder}
+                </div>
+              ) : null}
+            </div>
           </div>
           {endEnhancer}
         </label>

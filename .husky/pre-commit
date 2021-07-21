@@ -1,7 +1,6 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
-
+yarn prettier --write "**/*.{js,jsx,ts,tsx}"
 yarn build
 yarn esm
-yarn lint-staged
 git add .

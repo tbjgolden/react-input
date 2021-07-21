@@ -2,7 +2,8 @@ import React, { useContext, useMemo } from 'react';
 
 export const DEFAULT_THEME = {
   isDarkMode: true,
-  monospaceFont: "source-code-pro,Menlo,Monaco,Consolas,'Courier New',monospace",
+  monospaceFont:
+    "source-code-pro,Menlo,Monaco,Consolas,'Courier New',monospace",
   hue: 0, // [0-360),
   saturation: 0, // [0-100]%
 };
@@ -35,7 +36,8 @@ export const useTheme = (): {
     info: string;
   };
 } => {
-  const { isDarkMode, monospaceFont, hue, saturation } = useContext(ThemeContext);
+  const { isDarkMode, monospaceFont, hue, saturation } =
+    useContext(ThemeContext);
 
   const getLightness = (delta: number): number =>
     isDarkMode ? 0 + delta : 100 - delta;
@@ -53,6 +55,6 @@ export const useTheme = (): {
     isDarkMode,
     monospaceFont,
     shades,
-    semantic: isDarkMode ? DARK_SEMANTIC : LIGHT_SEMANTIC
+    semantic: isDarkMode ? DARK_SEMANTIC : LIGHT_SEMANTIC,
   };
 };

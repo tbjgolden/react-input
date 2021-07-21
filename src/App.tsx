@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Examples } from './Examples';
+import { Switch, Route, Link } from 'react-router-dom';
+import { XTextArea } from './lib/examples/TextArea';
+import { XTextInput } from './lib/examples/TextInput';
 import { ThemeContext, DEFAULT_THEME } from './lib/theme';
 
 export const Home = (): JSX.Element => {
@@ -29,43 +31,114 @@ export const Home = (): JSX.Element => {
     >
       <main className={isDarkMode ? 'dark' : ''}>
         <header>
-          <button onClick={() => setDarkModeForce(!isDarkMode)}>
-            {isDarkMode ? 'Light' : 'Dark'} mode
-          </button>
-          <br />
-          <br />
-          <label>
-            {`Hue: `}
-            <input
-              type="range"
-              min="0"
-              max="360"
-              value={hue}
-              onChange={(event) => {
-                setHueForce(parseInt(event.target.value));
+          <h1 style={{ marginTop: 0 }}>
+            <code>react-input</code>
+          </h1>
+          <h2>Global Options</h2>
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                marginRight: 16,
               }}
-              style={{ verticalAlign: 'middle' }}
-            />
-            {` ${hue}deg`}
-          </label>
-          <br />
-          <label>
-            {`Saturation: `}
-            <input
-              type="range"
-              min="0"
-              max="100"
-              value={saturation}
-              onChange={(event) => {
-                setSaturationForce(parseInt(event.target.value));
+            >
+              <button
+                onClick={() => setDarkModeForce(!isDarkMode)}
+                style={{ marginTop: 8, marginBottom: 8 }}
+              >
+                {isDarkMode ? 'Light' : 'Dark'} mode
+              </button>
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                flex: '1 0 auto',
               }}
-              style={{ verticalAlign: 'middle' }}
-            />
-            {` ${saturation}%`}
-          </label>
+            >
+              <label
+                style={{
+                  display: 'flex',
+                  flex: '1 1 0',
+                }}
+              >
+                {`Saturation: `}
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={saturation}
+                  onChange={(event) => {
+                    setSaturationForce(parseInt(event.target.value));
+                  }}
+                  style={{
+                    flex: '1 0 auto',
+                    verticalAlign: 'middle',
+                    width: 100,
+                  }}
+                />
+                {` ${saturation}%`}
+              </label>
+              <br />
+              <label
+                style={{
+                  display: 'flex',
+                  flex: '1 1 0',
+                }}
+              >
+                {`Hue: `}
+                <input
+                  type="range"
+                  min="0"
+                  max="360"
+                  value={hue}
+                  onChange={(event) => {
+                    setHueForce(parseInt(event.target.value));
+                  }}
+                  style={{
+                    flex: '1 0 auto',
+                    verticalAlign: 'middle',
+                    width: 100,
+                  }}
+                />
+                {` ${hue}deg`}
+              </label>
+            </div>
+          </div>
+          <hr />
+          <div>
+            {['TextInput', 'TextArea'].map((element) => (
+              <Link
+                to={`/${element}`}
+                style={{
+                  display: 'inline-block',
+                  color: 'inherit',
+                  marginTop: 8,
+                  marginRight: 8,
+                  fontWeight: 'bold',
+                }}
+                key={element}
+              >
+                {element}
+              </Link>
+            ))}
+          </div>
         </header>
 
-        <Examples />
+        <Switch>
+          <Route exact path={['/', '/TextInput']}>
+            <XTextInput />
+          </Route>
+          <Route path="/TextArea">
+            <XTextArea />
+          </Route>
+        </Switch>
 
         <footer></footer>
 
