@@ -1,11 +1,4 @@
-import React, {
-  ForwardedRef,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { ForwardedRef, useMemo, useRef, useState } from 'react';
 import { useFocus } from '@react-aria/interactions';
 import { useTheme } from '../theme';
 import { validate } from '../validation';
@@ -14,8 +7,6 @@ const isVisibleNode = (node?: React.ReactNode): boolean => {
   return node !== undefined && node !== null && node !== true && node !== false;
 };
 const defaultValidator = (value: string): boolean => value.trim().length > 0;
-
-type x = HTMLTextAreaElement;
 
 export const TextArea = React.forwardRef(
   (
