@@ -24,20 +24,20 @@ export const TextArea = React.forwardRef(
       disabled = false,
       autoComplete = 'on',
       placeholder,
-      rows = 4,
+      rows = 3,
     },
     ref,
   ) => {
     const { isDarkMode, shades, semantic, monospaceFont } = useTheme();
-    const textAreaElRef = useRef(null);
     const debounceRef = useRef();
     const prevDimensions = useRef({
       y: 0,
       height: 0,
     });
-    const [height, setHeight] = useState(null);
+    const [customHeight, setCustomHeight] = useState(null);
     const [hasBeenEdited, setHasBeenEdited] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
+    const [isBeingDragged, setIsBeingDragged] = useState(false);
     const { focusProps } = useFocus({
       onFocusChange: (isFocused) => {
         setIsFocused(isFocused);
@@ -46,13 +46,19 @@ export const TextArea = React.forwardRef(
         }
       },
     });
-    const computedRows = useMemo(() => {
+    const textAreaElRef = useRef(null);
+    const measureRef = useRef(null);
+    const lineHeight = measureRef.current?.clientHeight ?? 19;
+    const fontSize = measureRef.current?.clientWidth ?? 16;
+    const contentHeight = useMemo(() => {
       let newLineCount = 0;
       for (let i = value.length; i >= 0; i--) {
         if (value.charCodeAt(i) === 10) newLineCount += 1;
       }
-      return Math.max(rows, newLineCount + 1);
+      return lineHeight * Math.max(rows, newLineCount + 1) + 2.4 * fontSize;
     }, [value, rows]);
+    const height = Math.max(customHeight ?? 0, contentHeight);
+    const resizeCursor = height === contentHeight ? 's-resize' : 'ns-resize';
     const onMouseDown = (event) => {
       event.stopPropagation();
       prevDimensions.current.y = event.clientY;
@@ -62,15 +68,17 @@ export const TextArea = React.forwardRef(
         const height = prevDimensions.current.height + delta;
         prevDimensions.current.y = event.clientY;
         prevDimensions.current.height = height;
-        setHeight(height);
+        setCustomHeight(Math.max(height, lineHeight * rows));
       };
       const onWindowMouseUp = (event) => {
         event.stopPropagation();
         window.removeEventListener('mouseup', onWindowMouseUp);
         window.removeEventListener('mousemove', onWindowMouseMove);
+        setIsBeingDragged(false);
       };
       window.addEventListener('mouseup', onWindowMouseUp);
       window.addEventListener('mousemove', onWindowMouseMove);
+      setIsBeingDragged(true);
     };
     const onTouchStart = (event) => {
       const { clientY } = event.targetTouches.item(
@@ -87,15 +95,17 @@ export const TextArea = React.forwardRef(
           const height = prevDimensions.current.height + delta;
           prevDimensions.current.y = lastTouch.clientY;
           prevDimensions.current.height = height;
-          setHeight(height);
+          setCustomHeight(Math.max(height, lineHeight * rows));
         }
       };
       const onWindowTouchEnd = () => {
         window.removeEventListener('touchend', onWindowTouchEnd);
         window.removeEventListener('touchmove', onWindowTouchMove);
+        setIsBeingDragged(false);
       };
       window.addEventListener('touchend', onWindowTouchEnd);
       window.addEventListener('touchmove', onWindowTouchMove);
+      setIsBeingDragged(true);
     };
     const isValid = validate(value, validator);
     const inputIsClosed = value === '' && placeholder === undefined;
@@ -128,6 +138,8 @@ export const TextArea = React.forwardRef(
             borderBottom: `2px solid ${borderColor}`,
             backgroundColor,
             color: textColor,
+            height,
+            font: 'inherit',
           }}
         >
           {startEnhancer}
@@ -196,7 +208,6 @@ export const TextArea = React.forwardRef(
               disabled={disabled}
               autoComplete={autoComplete}
               value={value}
-              rows={computedRows}
               onChange={(event) => {
                 onChange(
                   event.target.value,
@@ -213,26 +224,41 @@ export const TextArea = React.forwardRef(
               }}
               style={{
                 color: textColor,
-                marginTop: inputIsClosed ? '1.2em' : '1.7em',
-                marginBottom: inputIsClosed ? '1.5em' : '1em',
-                paddingTop: 0,
-                paddingBottom: 0,
+                paddingTop: inputIsClosed ? '1.2em' : '1.65em',
+                paddingBottom: inputIsClosed ? '1.2em' : '0.75em',
                 paddingLeft: isVisibleNode(startEnhancer) ? 0 : '1em',
                 paddingRight: isVisibleNode(endEnhancer) ? 0 : '1em',
                 font: 'inherit',
                 outline: 0,
                 border: 0,
                 width: '100%',
-                height: height ?? 'auto',
-                minHeight: '1.2em',
+                height: '100%',
                 background: 'transparent',
                 fontFamily: monospace ? monospaceFont : 'inherit',
                 resize: 'none',
                 touchAction: 'none',
-                position: 'relative',
+                position: 'absolute',
                 zIndex: 2,
+                cursor: isBeingDragged ? resizeCursor : 'auto',
               }}
             />
+            <div
+              style={{
+                position: 'absolute',
+                visibility: 'hidden',
+                zIndex: -100,
+                font: 'inherit',
+                display: 'inline-block',
+                width: '1em',
+                padding: 0,
+                margin: 0,
+                pointerEvents: 'none',
+                userSelect: 'none',
+              }}
+              ref={measureRef}
+            >
+              &nbsp;
+            </div>
           </div>
           {endEnhancer}
           {resize ? (
@@ -241,6 +267,7 @@ export const TextArea = React.forwardRef(
               onTouchStart={onTouchStart}
               style={{
                 position: 'absolute',
+                zIndex: 3,
                 right: 0,
                 bottom: 0,
                 borderWidth: window.matchMedia('not (any-pointer: fine)')
@@ -253,7 +280,7 @@ export const TextArea = React.forwardRef(
                 borderRightColor: borderColor,
                 borderBottomColor: borderColor,
                 touchAction: 'none',
-                cursor: 'ns-resize',
+                cursor: height === contentHeight ? 's-resize' : 'ns-resize',
               }}
             />
           ) : null}
@@ -264,6 +291,7 @@ export const TextArea = React.forwardRef(
               fontSize: '75%',
               color: statusColor,
               padding: '.6em 1.4em 0',
+              cursor: isBeingDragged ? resizeCursor : 'auto',
             }}
           >
             {status}
