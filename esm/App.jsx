@@ -2,7 +2,17 @@ import React, { useState } from 'react';
 import { Switch, Route, Link } from 'react-router-dom';
 import { XTextArea } from './lib/examples/TextArea';
 import { XTextInput } from './lib/examples/TextInput';
+import { XTextMask } from './lib/examples/TextMask';
 import { ThemeContext, DEFAULT_THEME } from './lib/theme';
+const ELEMENTS = {
+  XTextInput,
+  XTextArea,
+  XTextMask,
+};
+const ELEMENTS_LIST = Object.entries(ELEMENTS).map(([key, component]) => [
+  key.slice(1),
+  component,
+]);
 export const Home = () => {
   const [darkModeForce, setDarkModeForce] = useState(null);
   const [hueForce, setHueForce] = useState(null);
@@ -10,12 +20,6 @@ export const Home = () => {
   const isDarkMode = darkModeForce ?? DEFAULT_THEME.isDarkMode;
   const hue = hueForce ?? DEFAULT_THEME.hue;
   const saturation = saturationForce ?? DEFAULT_THEME.saturation;
-  const theme = {
-    ...DEFAULT_THEME,
-    isDarkMode,
-    hue,
-    saturation,
-  };
   return (
     <ThemeContext.Provider
       value={{
@@ -109,9 +113,9 @@ export const Home = () => {
           </div>
           <hr />
           <div>
-            {['TextInput', 'TextArea'].map((element) => (
+            {ELEMENTS_LIST.map(([key]) => (
               <Link
-                to={`/${element}`}
+                to={`/${key}`}
                 style={{
                   display: 'inline-block',
                   color: 'inherit',
@@ -119,28 +123,26 @@ export const Home = () => {
                   marginRight: 8,
                   fontWeight: 'bold',
                 }}
-                key={element}
+                key={key}
               >
-                {element}
+                {key}
               </Link>
             ))}
           </div>
         </header>
 
         <Switch>
-          <Route exact path={['/', '/TextInput']}>
+          <Route exact path="/">
+            <h2>TextInput</h2>
             <XTextInput />
           </Route>
-          <Route path="/TextArea">
-            <XTextArea />
-          </Route>
+          {ELEMENTS_LIST.map(([key, Element]) => (
+            <Route path={`/${key}`} key={key}>
+              <h2>{key}</h2>
+              <Element />
+            </Route>
+          ))}
         </Switch>
-
-        <footer></footer>
-
-        <pre style={{ whiteSpace: 'pre-wrap' }}>
-          <code>THEME: {JSON.stringify(theme, null, 2)}</code>
-        </pre>
       </main>
     </ThemeContext.Provider>
   );

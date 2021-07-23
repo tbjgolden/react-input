@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { TextArea } from '../components/TextArea';
+import { Example } from './_Example';
 export const XTextArea = () => {
   const [textArea1, setTextArea1] = useState('');
   const [textArea2, setTextArea2] = useState('');
@@ -58,6 +59,7 @@ export const XTextArea = () => {
           onChange={setTextArea6}
           validator={null}
           ref={textArea6Ref}
+          rows={1}
           startEnhancer={
             <div
               style={{
@@ -134,24 +136,6 @@ export const XTextArea = () => {
           }
         />
       </Example>
-    </div>
-  );
-};
-const Example = ({ name, children }) => {
-  return (
-    <div
-      style={{
-        margin: '16px 0',
-      }}
-    >
-      <div
-        style={{
-          marginBottom: 8,
-        }}
-      >
-        {name}
-      </div>
-      <div>{children}</div>
     </div>
   );
 };

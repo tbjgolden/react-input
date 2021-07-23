@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { TextInput } from '../components/TextInput';
+import { Example } from './_Example';
 
 export const XTextInput: React.FC = () => {
   const [textInput1, setTextInput1] = useState('');
@@ -123,28 +124,6 @@ export const XTextInput: React.FC = () => {
           }
         />
       </Example>
-    </div>
-  );
-};
-
-const Example: React.FC<{
-  name: string;
-  children: React.ReactNode;
-}> = ({ name, children }) => {
-  return (
-    <div
-      style={{
-        margin: '16px 0',
-      }}
-    >
-      <div
-        style={{
-          marginBottom: 8,
-        }}
-      >
-        {name}
-      </div>
-      <div>{children}</div>
     </div>
   );
 };

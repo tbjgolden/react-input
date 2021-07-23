@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { TextInput } from '../components/TextInput';
+import { Example } from './_Example';
 export const XTextInput = () => {
   const [textInput1, setTextInput1] = useState('');
   const [textInput2, setTextInput2] = useState('');
@@ -121,24 +122,6 @@ export const XTextInput = () => {
           }
         />
       </Example>
-    </div>
-  );
-};
-const Example = ({ name, children }) => {
-  return (
-    <div
-      style={{
-        margin: '16px 0',
-      }}
-    >
-      <div
-        style={{
-          marginBottom: 8,
-        }}
-      >
-        {name}
-      </div>
-      <div>{children}</div>
     </div>
   );
 };

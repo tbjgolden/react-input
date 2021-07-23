@@ -181,6 +181,7 @@ export const TextArea = React.forwardRef(
             color: textColor,
             height,
             font: 'inherit',
+            overflow: 'hidden',
           }}
         >
           {startEnhancer}
@@ -281,6 +282,7 @@ export const TextArea = React.forwardRef(
                 position: 'absolute',
                 zIndex: 2,
                 cursor: isBeingDragged ? resizeCursor : 'auto',
+                overflow: 'hidden',
               }}
             />
             <div
