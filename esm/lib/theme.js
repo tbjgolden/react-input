@@ -32,10 +32,13 @@ export const useTheme = () => {
       ),
     [hue, saturation, isDarkMode],
   );
-  return {
-    isDarkMode,
-    monospaceFont,
-    shades,
-    semantic: isDarkMode ? DARK_SEMANTIC : LIGHT_SEMANTIC,
-  };
+  return useMemo(
+    () => ({
+      isDarkMode,
+      monospaceFont,
+      shades,
+      semantic: isDarkMode ? DARK_SEMANTIC : LIGHT_SEMANTIC,
+    }),
+    [isDarkMode, monospaceFont, shades],
+  );
 };

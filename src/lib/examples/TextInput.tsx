@@ -9,6 +9,7 @@ export const XTextInput: React.FC = () => {
   const [textInput4, setTextInput4] = useState('');
   const textInput5Ref = useRef<HTMLInputElement | null>(null);
   const [textInput5, setTextInput5] = useState('');
+  const [textInput6, setTextInput6] = useState('orange');
 
   return (
     <div>
@@ -122,6 +123,15 @@ export const XTextInput: React.FC = () => {
               </div>
             )
           }
+        />
+      </Example>
+
+      <Example name="Disabled text input">
+        <TextInput
+          label="Fruit"
+          value={textInput6}
+          onChange={setTextInput6}
+          disabled
         />
       </Example>
     </div>

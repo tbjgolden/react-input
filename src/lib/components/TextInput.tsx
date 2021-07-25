@@ -61,8 +61,9 @@ export const TextInput = React.forwardRef(
     const inputIsClosed = value === '' && placeholder === undefined;
 
     const textColor = shades[isFocused ? 100 : isDarkMode ? 80 : 70];
-    const backgroundColor =
-      shades[isFocused ? (isDarkMode ? 15 : 12) : isDarkMode ? 10 : 8];
+    const backgroundColor = disabled
+      ? shades[30]
+      : shades[isFocused ? (isDarkMode ? 15 : 12) : isDarkMode ? 10 : 8];
     let labelColor = shades[70];
     let borderColor = shades[isFocused ? 70 : 50];
     let statusColor = shades[70];
@@ -132,6 +133,8 @@ export const TextInput = React.forwardRef(
                 border: 0,
                 width: '100%',
                 background: 'transparent',
+                position: 'relative',
+                zIndex: 2,
                 fontFamily: monospace ? monospaceFont : 'inherit',
               }}
             />

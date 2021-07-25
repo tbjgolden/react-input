@@ -8,6 +8,7 @@ export const XTextInput = () => {
   const [textInput4, setTextInput4] = useState('');
   const textInput5Ref = useRef(null);
   const [textInput5, setTextInput5] = useState('');
+  const [textInput6, setTextInput6] = useState('orange');
   return (
     <div>
       <Example name="Normal text input">
@@ -120,6 +121,15 @@ export const XTextInput = () => {
               </div>
             )
           }
+        />
+      </Example>
+
+      <Example name="Disabled text input">
+        <TextInput
+          label="Fruit"
+          value={textInput6}
+          onChange={setTextInput6}
+          disabled
         />
       </Example>
     </div>

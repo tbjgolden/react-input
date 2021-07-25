@@ -5,6 +5,7 @@ export const XTextMask = () => {
   const [textInput1, setTextInput1] = useState('');
   const [textInput2, setTextInput2] = useState('');
   const [textInput3, setTextInput3] = useState('2012-05-19');
+  const [textInput4, setTextInput4] = useState('+1 (555) 7733-600');
   return (
     <div>
       <p>TextMask is ideal for constraining data input with a known syntax.</p>
@@ -67,6 +68,19 @@ export const XTextMask = () => {
             setTextInput3(value);
           }}
           placeholder
+        />
+      </Example>
+      <Example name="Disabled text mask">
+        <TextMask
+          label="Phone"
+          mask={{
+            mask: '+1 (000) 000-0000',
+          }}
+          disabled
+          value={textInput4}
+          onChange={(value) => {
+            setTextInput4(value);
+          }}
         />
       </Example>
     </div>

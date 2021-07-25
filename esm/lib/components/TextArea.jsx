@@ -110,8 +110,9 @@ export const TextArea = React.forwardRef(
     const isValid = validate(value, validator);
     const inputIsClosed = value === '' && placeholder === undefined;
     const textColor = shades[isFocused ? 100 : isDarkMode ? 80 : 70];
-    const backgroundColor =
-      shades[isFocused ? (isDarkMode ? 15 : 12) : isDarkMode ? 10 : 8];
+    const backgroundColor = disabled
+      ? shades[30]
+      : shades[isFocused ? (isDarkMode ? 15 : 12) : isDarkMode ? 10 : 8];
     let labelColor = shades[70];
     let borderColor = shades[isFocused ? 70 : 50];
     let statusColor = shades[70];

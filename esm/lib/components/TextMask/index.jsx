@@ -1,16 +1,12 @@
-import React, { ForwardedRef, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useFocus } from '@react-aria/interactions';
-import { useTheme } from '../theme';
-import { validateWithMask } from '../validation';
+import { useTheme } from '../../theme';
+import { validateWithMask } from '../../validation';
 import { MaskInput } from './_Mask';
-import type { AnyMaskedOptions } from 'imask';
-
-const isVisibleNode = (node?: React.ReactNode): boolean => {
+const isVisibleNode = (node) => {
   return node !== undefined && node !== null && node !== true && node !== false;
 };
-const defaultValidator = (_: string, matchesMask: boolean): boolean =>
-  matchesMask;
-
+const defaultValidator = (_, matchesMask) => matchesMask;
 export const TextMask = React.forwardRef(
   (
     {
@@ -29,30 +25,11 @@ export const TextMask = React.forwardRef(
       disabled = false,
       autoComplete = 'on',
       placeholder = false,
-    }: {
-      label: string;
-      value: string;
-      onChange: (str: string, isValid: boolean) => void;
-      // optional
-      mask?: AnyMaskedOptions;
-      validator?:
-        | RegExp
-        | ((str: string, matchesMask: boolean) => boolean)
-        | null;
-      status?: React.ReactNode;
-      startEnhancer?: React.ReactNode;
-      endEnhancer?: React.ReactNode;
-      monospace?: boolean;
-      // input props
-      name?: HTMLInputElement['name'];
-      disabled?: HTMLInputElement['disabled'];
-      autoComplete?: HTMLInputElement['autocomplete'];
-      placeholder?: boolean;
     },
-    ref: ForwardedRef<HTMLInputElement>,
+    ref,
   ) => {
     const { isDarkMode, shades, semantic, monospaceFont } = useTheme();
-    const debounceRef = useRef<ReturnType<typeof setTimeout>>();
+    const debounceRef = useRef();
     const [hasBeenEdited, setHasBeenEdited] = useState(false);
     const hasFocusedRef = useRef(false);
     const [isFocused, setIsFocused] = useState(false);
@@ -66,15 +43,13 @@ export const TextMask = React.forwardRef(
         }
       },
     });
-
     const isValid = validateWithMask(value, matchesMask, validator);
-
     const inputIsClosed =
-      (value === '' || !hasFocusedRef.current) && !placeholder;
-
+      (value === '' || !hasFocusedRef.current) && !(placeholder || disabled);
     const textColor = shades[isFocused ? 100 : isDarkMode ? 80 : 70];
-    const backgroundColor =
-      shades[isFocused ? (isDarkMode ? 15 : 12) : isDarkMode ? 10 : 8];
+    const backgroundColor = disabled
+      ? shades[30]
+      : shades[isFocused ? (isDarkMode ? 15 : 12) : isDarkMode ? 10 : 8];
     let labelColor = shades[70];
     let borderColor = shades[isFocused ? 70 : 50];
     let statusColor = shades[70];
@@ -85,7 +60,6 @@ export const TextMask = React.forwardRef(
       )},${isFocused && inputIsClosed ? 0.6 : 1})`;
       borderColor = isValid ? semantic.success : semantic.danger;
       statusColor = isValid ? semantic.success : semantic.danger;
-
       if (!isValid && status === undefined) {
         status =
           validator === defaultValidator
@@ -93,7 +67,6 @@ export const TextMask = React.forwardRef(
             : `${label} is invalid`;
       }
     }
-
     return (
       <div>
         <label
@@ -140,6 +113,8 @@ export const TextMask = React.forwardRef(
                 font: 'inherit',
                 outline: 0,
                 border: 0,
+                position: 'relative',
+                zIndex: 1,
                 width: '100%',
                 background: 'transparent',
                 fontFamily: monospace ? monospaceFont : 'inherit',
@@ -149,6 +124,8 @@ export const TextMask = React.forwardRef(
             <div
               style={{
                 position: 'absolute',
+                zIndex: 2,
+                pointerEvents: 'none',
                 top: 0,
                 left: isVisibleNode(startEnhancer) ? 0 : '1em',
                 right: isVisibleNode(endEnhancer) ? 0 : '1em',

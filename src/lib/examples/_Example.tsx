@@ -10,13 +10,13 @@ export const Example: React.FC<{
         margin: '16px 0',
       }}
     >
-      <div
+      <p
         style={{
           marginBottom: 8,
         }}
       >
         {name}
-      </div>
+      </p>
       <div>{children}</div>
     </div>
   );

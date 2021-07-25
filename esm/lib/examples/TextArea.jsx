@@ -9,6 +9,7 @@ export const XTextArea = () => {
   const [textArea5, setTextArea5] = useState('');
   const textArea6Ref = useRef(null);
   const [textArea6, setTextArea6] = useState('');
+  const [textArea7, setTextArea7] = useState('orange');
   return (
     <div>
       <Example name="Normal text area">
@@ -134,6 +135,15 @@ export const XTextArea = () => {
               </div>
             )
           }
+        />
+      </Example>
+
+      <Example name="Disabled text area">
+        <TextArea
+          label="Fruit"
+          disabled
+          value={textArea7}
+          onChange={setTextArea7}
         />
       </Example>
     </div>

@@ -1,45 +1,77 @@
-import React, { useRef, useState } from 'react';
+import React, { ForwardedRef, useRef, useState } from 'react';
 import { useFocus } from '@react-aria/interactions';
-import { useTheme } from '../theme';
-import { validate } from '../validation';
-const isVisibleNode = (node) => {
+import { useTheme } from '../../theme';
+import { validateWithMask } from '../../validation';
+import { MaskInput } from './_Mask';
+import type { AnyMaskedOptions } from 'imask';
+
+const isVisibleNode = (node?: React.ReactNode): boolean => {
   return node !== undefined && node !== null && node !== true && node !== false;
 };
-const defaultValidator = (value) => value.trim().length > 0;
-export const TextInput = React.forwardRef(
+const defaultValidator = (_: string, matchesMask: boolean): boolean =>
+  matchesMask;
+
+export const TextMask = React.forwardRef(
   (
     {
       label,
       value,
       onChange,
       // optional
+      mask,
       validator = defaultValidator,
       status,
       startEnhancer,
       endEnhancer,
-      monospace = false,
+      monospace = true,
       // text input props
       name = label,
       disabled = false,
       autoComplete = 'on',
-      placeholder,
+      placeholder = false,
+    }: {
+      label: string;
+      value: string;
+      onChange: (str: string, isValid: boolean) => void;
+      // optional
+      mask?: AnyMaskedOptions;
+      validator?:
+        | RegExp
+        | ((str: string, matchesMask: boolean) => boolean)
+        | null;
+      status?: React.ReactNode;
+      startEnhancer?: React.ReactNode;
+      endEnhancer?: React.ReactNode;
+      monospace?: boolean;
+      // input props
+      name?: HTMLInputElement['name'];
+      disabled?: HTMLInputElement['disabled'];
+      autoComplete?: HTMLInputElement['autocomplete'];
+      placeholder?: boolean;
     },
-    ref,
+    ref: ForwardedRef<HTMLInputElement>,
   ) => {
     const { isDarkMode, shades, semantic, monospaceFont } = useTheme();
-    const debounceRef = useRef();
+    const debounceRef = useRef<ReturnType<typeof setTimeout>>();
     const [hasBeenEdited, setHasBeenEdited] = useState(false);
+    const hasFocusedRef = useRef(false);
     const [isFocused, setIsFocused] = useState(false);
+    const [matchesMask, setMatchesMask] = useState(false);
     const { focusProps } = useFocus({
       onFocusChange: (isFocused) => {
+        hasFocusedRef.current = true;
         setIsFocused(isFocused);
         if (!isFocused && !hasBeenEdited) {
           setHasBeenEdited(true);
         }
       },
     });
-    const isValid = validate(value, validator);
-    const inputIsClosed = value === '' && placeholder === undefined;
+
+    const isValid = validateWithMask(value, matchesMask, validator);
+
+    const inputIsClosed =
+      (value === '' || !hasFocusedRef.current) && !(placeholder || disabled);
+
     const textColor = shades[isFocused ? 100 : isDarkMode ? 80 : 70];
     const backgroundColor = disabled
       ? shades[30]
@@ -54,6 +86,7 @@ export const TextInput = React.forwardRef(
       )},${isFocused && inputIsClosed ? 0.6 : 1})`;
       borderColor = isValid ? semantic.success : semantic.danger;
       statusColor = isValid ? semantic.success : semantic.danger;
+
       if (!isValid && status === undefined) {
         status =
           validator === defaultValidator
@@ -61,6 +94,7 @@ export const TextInput = React.forwardRef(
             : `${label} is invalid`;
       }
     }
+
     return (
       <div>
         <label
@@ -79,29 +113,27 @@ export const TextInput = React.forwardRef(
               position: 'relative',
             }}
           >
-            <input
+            <MaskInput
               {...focusProps}
-              ref={ref}
+              mask={mask}
               name={name}
               disabled={disabled}
               autoComplete={autoComplete}
               value={value}
-              onChange={(event) => {
-                onChange(
-                  event.target.value,
-                  validate(event.target.value, validator),
-                );
+              onInputChange={(value, isComplete) => {
+                onChange(value, validateWithMask(value, isComplete, validator));
                 clearTimeout(debounceRef.current);
-                if (!hasBeenEdited) {
+                if (!hasBeenEdited && hasFocusedRef.current) {
                   debounceRef.current = setTimeout(() => {
                     if (!hasBeenEdited) {
                       setHasBeenEdited(true);
                     }
                   }, 300);
                 }
+                setMatchesMask(isComplete);
               }}
               style={{
-                color: textColor,
+                color: inputIsClosed ? backgroundColor : textColor,
                 paddingTop: inputIsClosed ? '1.2em' : '1.7em',
                 paddingBottom: inputIsClosed ? '1.2em' : '.7em',
                 paddingLeft: isVisibleNode(startEnhancer) ? 0 : '1em',
@@ -109,16 +141,19 @@ export const TextInput = React.forwardRef(
                 font: 'inherit',
                 outline: 0,
                 border: 0,
+                position: 'relative',
+                zIndex: 1,
                 width: '100%',
                 background: 'transparent',
-                position: 'relative',
-                zIndex: 2,
                 fontFamily: monospace ? monospaceFont : 'inherit',
               }}
+              ref={ref}
             />
             <div
               style={{
                 position: 'absolute',
+                zIndex: 2,
+                pointerEvents: 'none',
                 top: 0,
                 left: isVisibleNode(startEnhancer) ? 0 : '1em',
                 right: isVisibleNode(endEnhancer) ? 0 : '1em',
@@ -141,7 +176,7 @@ export const TextInput = React.forwardRef(
               >
                 {label}
               </div>
-              {value === '' && placeholder !== undefined ? (
+              {inputIsClosed ? null : (
                 <div
                   style={{
                     position: 'absolute',
@@ -149,19 +184,20 @@ export const TextInput = React.forwardRef(
                     left: 0,
                     userSelect: 'none',
                     pointerEvents: 'none',
-                    color: shades[40],
+                    color: shades[30],
                     padding: 0,
-                    fontSize: 'inherit',
+                    font: 'inherit',
                     outline: 0,
                     border: 0,
                     background: 'transparent',
                     whiteSpace: 'pre',
                     overflow: 'hidden',
+                    fontFamily: monospace ? monospaceFont : 'inherit',
                   }}
                 >
-                  {placeholder}
+                  {value.replace(/[^▮]/g, '\u00a0')}
                 </div>
-              ) : null}
+              )}
             </div>
           </div>
           {endEnhancer}
